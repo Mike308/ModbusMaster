@@ -7,6 +7,9 @@
 #include <QSerialPort>
 #include <QDebug>
 
+class QModbusReply;
+class QModbusClient;
+
 
 class Modbus : public QObject
 {
@@ -23,6 +26,11 @@ private:
     QModbusClient *modbusSlave;
 
     QModbusDataUnit prepareRequest(int regAdress, int regType);
+
+private slots:
+    void readReady();
+
+
 
 
 

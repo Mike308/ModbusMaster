@@ -1,7 +1,9 @@
 #include "modbus.h"
 
-Modbus::Modbus()
-{
+Modbus::Modbus(){
+
+    modbusSlave = new QModbusRtuSerialMaster(this);
+
 
 }
 
@@ -50,6 +52,8 @@ void Modbus::executeReadRequest(int slaveAdress, int regAdress, int regType){
         if (!reply->isFinished())
 
             //TODO: need connect signal to slot
+            connect(reply,&QModbusReply::finished,this,&Modbus::readReady);
+
 
             else
 
@@ -62,6 +66,37 @@ void Modbus::executeReadRequest(int slaveAdress, int regAdress, int regType){
         qDebug () << "Error: " << modbusSlave->errorString();
 
     }
+
+}
+
+void Modbus::readReady(){
+
+    auto reply = qobject_cast<QModbusReply*>(sender());
+
+    if (!reply) return;
+
+    if (reply->error()==QModbusDevice::NoError){
+
+        const QModbusDataUnit modbusDataUnit = reply->result();
+
+        for (uint i=0; i<modbusDataUnit.valueCount();i++){
+
+            qDebug () << "Value: " << modbusDataUnit.value(i);
+
+        }
+
+    }
+
+    else if (reply->error()==QModbusDevice::ProtocolError){
+
+        qDebug () << "Protocol error: " << reply->errorString();
+
+    }else {
+
+        qDebug () << "Error: " << reply->errorString();
+
+    }
+
 
 }
 
