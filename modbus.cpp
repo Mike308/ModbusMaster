@@ -35,4 +35,40 @@ bool Modbus::connectToSlave(QString port, int baud){
 
 }
 
+QModbusDataUnit Modbus::prepareRequest(int regAdress, int regType){
+
+    return QModbusDataUnit(regType, regAdress);
+
+}
+
+void Modbus::executeReadRequest(int slaveAdress, int regAdress, int regType){
+
+    if (!modbusSlave) return;
+
+    if (auto *reply = modbusSlave->sendReadRequest(prepareRequest(regAdress,regType),slaveAdress)){
+
+        if (!reply->isFinished())
+
+            //TODO: need connect signal to slot
+
+            else
+
+            delete reply;
+
+
+
+    }else{
+
+        qDebug () << "Error: " << modbusSlave->errorString();
+
+    }
+
+}
+
+
+
+
+
+
+
 

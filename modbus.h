@@ -16,10 +16,15 @@ class Modbus : public QObject
 public:
     Modbus();
     bool connectToSlave(QString port, int baud);
+    bool executeReadRequest(int slaveAdress, int regAdress, int regType); //passing adress of slave, adress of register and register type
 
 private:
     QModbusReply *modbusReply;
     QModbusClient *modbusSlave;
+
+    QModbusDataUnit prepareRequest(int regAdress, int regType);
+
+
 
 
 
