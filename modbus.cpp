@@ -39,7 +39,7 @@ bool Modbus::connectToSlave(QString port, int baud){
 
 QModbusDataUnit Modbus::prepareRequest(int regAdress, int regType){
 
-    return QModbusDataUnit(regType, regAdress);
+    return QModbusDataUnit( (QModbusDataUnit::RegisterType)regType, regAdress,1);
 
 }
 
