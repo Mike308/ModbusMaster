@@ -51,7 +51,7 @@ void Modbus::executeReadRequest(int slaveAdress, int regAdress, int regType){
 
         if (!reply->isFinished())
 
-            //TODO: need connect signal to slot
+
             connect(reply,&QModbusReply::finished,this,&Modbus::readReady);
 
 
