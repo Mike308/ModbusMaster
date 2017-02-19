@@ -69,6 +69,40 @@ void Modbus::executeReadRequest(int slaveAdress, int regAdress, int regType){
 
 }
 
+QModbusDataUnit Modbus::prepareWriteRequest(int regAdress, int regType){
+
+    return QModbusDataUnit((QModbusDataUnit::RegisterType)regType,regAdress,1);
+
+}
+
+void Modbus::prepareWriteRequest(int slaveAdress, int regAdress, int regType, int value){
+
+    QModbusDataUnit writeRequest = prepareWriteRequest(regAdress,regType);
+
+    for (uint i=0; i<writeRequest.valueCount(); i++){
+
+        writeRequest.setValue(i,value);
+    }
+
+    if (auto * reply = modbusSlave->sendWriteRequest(writeRequest,slaveAdress)){
+
+        if (!reply->isFinished()){
+
+            //TODO: conncet signal finished to slot
+
+        }else{
+
+            reply->deleteLater();
+        }
+    }else{
+
+        qDebug () << "Error: " << reply->errorString();
+    }
+
+
+}
+
+
 void Modbus::readReady(){
 
     auto reply = qobject_cast<QModbusReply*>(sender());
@@ -99,6 +133,8 @@ void Modbus::readReady(){
 
 
 }
+
+
 
 
 
