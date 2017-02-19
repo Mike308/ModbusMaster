@@ -75,7 +75,7 @@ QModbusDataUnit Modbus::prepareWriteRequest(int regAdress, int regType){
 
 }
 
-void Modbus::prepareWriteRequest(int slaveAdress, int regAdress, int regType, int value){
+void Modbus::executeWriteRequest(int slaveAdress, int regAdress, int regType, int value){
 
     QModbusDataUnit writeRequest = prepareWriteRequest(regAdress,regType);
 
@@ -89,6 +89,7 @@ void Modbus::prepareWriteRequest(int slaveAdress, int regAdress, int regType, in
         if (!reply->isFinished()){
 
             //TODO: conncet signal finished to slot
+            connect(reply,&QModbusReply::finished,this,&Modbus::writeRequestFinished);
 
         }else{
 
@@ -131,6 +132,27 @@ void Modbus::readReady(){
 
     }
 
+
+}
+
+void Modbus::writeRequestFinished(){
+
+    auto reply  = qobject_cast<QModbusReply*>(sender());
+
+    if (!reply) return;
+
+    if (reply->error()==QModbusDevice::ProtocolError){
+
+        qDebug () << "Protocol error: " << reply->errorString();
+
+    }else if (!reply->error()==QModbusDevice::NoError){
+
+        qDebug () << "Other error: " << reply->errorString();
+    }
+    else{
+
+        qDebug () << "Send request status: ok ";
+    }
 
 }
 
