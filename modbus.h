@@ -21,6 +21,9 @@ public:
     bool connectToSlave(QString port, int baud);
     void executeReadRequest(int slaveAdress, int regAdress, int regType); //passing adress of slave, adress of register and register type
 
+    enum RegType { DiscreteInputs = 1, Coils = 2, InputRegisters = 3, HoldingRegisters = 4 };
+
+
 private:
     QModbusReply *modbusReply;
     QModbusClient *modbusSlave;
